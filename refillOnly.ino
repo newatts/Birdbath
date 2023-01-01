@@ -1,0 +1,107 @@
+//birdbath clearing. 
+
+// constants won't change. Used here to set a pin number:
+const int waterIn=5;  //module on the right when looking from the arduino connectors.
+const int waterOut = 6;          //controls relay side with '2 relay module"
+const int lightSensor = 11;
+const int fillTime=60;
+const int emptyTime=60;
+const int pulseTime=10;
+const int shortTime=2;
+const int delayMinutes=30;
+
+// Variables will change:
+const bool ledOn = HIGH;             // ledState used to set the LED
+const bool ledOff = LOW;
+const bool tapOn = LOW;
+const bool tapOff = HIGH;
+
+
+// Generally, you should use "unsigned long" for variables that hold time
+// The value will quickly become too large for an int to store
+unsigned long previousMillis = 0;        // will store last time LED was updated
+
+// constants won't change:
+const int minutes = 30;
+long interval = 1000;           // interval at which to blink (milliseconds)
+
+void setup() {
+  // set the digital pin as output:
+  pinMode(waterIn, OUTPUT);
+  pinMode(waterOut, OUTPUT);
+  pinMode(lightSensor, INPUT);
+  Serial.begin(9600);
+  delay(20000);
+   digitalWrite(waterIn, tapOn);
+  Serial.println("waterIn is On, 10 sec wait");
+  delay(10000);
+  digitalWrite(waterIn, tapOff);
+  Serial.println("waterIn is Off, 10 sec wait");
+  delay(10000);
+  Serial.println("go");
+}
+
+void loop() {
+
+int sensorValue = analogRead(A0);
+  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  float voltage = sensorValue * (5.0 / 1023.0);
+// wrap code in the following if put in llight sensor 
+// if(sensorValue > 3){   }//
+   
+   
+  Serial.println("main");
+  //start clearing in pipe//scare birds
+  for(int j=0; j<10; j++){
+      Serial.println("scaring birds pulsing water in");
+      Serial.println(j);
+      digitalWrite(waterIn,tapOn);
+      timeDelaySeconds(pulseTime);
+      digitalWrite(waterIn, tapOff);
+      timeDelaySeconds(shortTime);
+      Serial.println("toggle");
+    }
+    digitalWrite(waterIn, tapOn);
+    timeDelaySeconds(fillTime);
+    digitalWrite(waterIn, tapOff);
+    
+    //fill and leave for... 30 minutes?  
+    timeDelayMinutes(delayMinutes);
+}
+
+void timeDelaySeconds(int seconds){
+  //set up delay of seconds
+   unsigned long currentMillis = millis();
+   unsigned long previousMillis = currentMillis;
+   unsigned long waitTime = (unsigned long) seconds * 1000;
+ //  interval = seconds;
+  Serial.println("before wait time");
+  Serial.println("timeDelaySeconds");
+  Serial.println(seconds);
+   Serial.println("currentMillis");
+      Serial.println(millis());
+      Serial.println("previousMillis");
+      Serial.println(previousMillis);
+      Serial.println("waitTime");
+      Serial.println(waitTime);
+  while(millis() - previousMillis <= waitTime) {
+      // save the last time you blinked the LED
+      Serial.println("currentMillis");
+      Serial.println(millis());
+   };
+   Serial.println("After delay");
+    Serial.println("currentMillis");
+      Serial.println(millis());
+      Serial.println("previousMillis");
+      Serial.println(previousMillis);
+      Serial.println("waitTime");
+      Serial.println(waitTime);
+}
+//end delay 
+
+void timeDelayMinutes(int minutes){
+  //set up delay of minutes
+  unsigned long secs= (unsigned long) minutes * 60;
+  timeDelaySeconds(secs);
+}
+//end delay 
